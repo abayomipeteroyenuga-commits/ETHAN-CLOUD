@@ -1,23 +1,11 @@
-# ETHAN CLOUD v2 — Supabase Ready
+# ETHAN CLOUD v7
 
-## Included
-- Email/password authentication
-- Private per-user file storage
-- Upload and signed file opening/download
-- Folders
-- Search
-- Recent, Starred and Trash views
-- Restore and permanent delete
-- Storage usage display
-- PostgreSQL metadata with Row Level Security
-- Private Supabase Storage bucket policies
+Auth, UI/UX and security-focused update.
 
-## Setup
-1. Create/open a Supabase project.
-2. Open SQL Editor and run `supabase.sql` once.
-3. Open `config.js` and replace the two placeholders with your Supabase Project URL and publishable/anon key. Never put the service-role key in this file.
-4. In Supabase Authentication, configure your production Site URL as `https://cloud.ethandigitalacademy.org` when the domain is live.
-5. Upload these files to GitHub and deploy to Vercel.
-6. Connect `cloud.ethandigitalacademy.org` in Vercel and add the DNS record Vercel provides.
+- Repaired email/password account creation flow.
+- Removed localhost/current-origin dependency from sign-up/reset requests.
+- Added loading states and clearer authentication errors.
+- Reduced typography, spacing, cards, sidebar and login dimensions.
+- Retains private Supabase Storage and RLS policies.
 
-Security note: the bucket is private and policies restrict object paths to the signed-in user's user ID.
+In Supabase Authentication > URL Configuration, set Site URL to the live Vercel URL, then later to https://cloud.ethandigitalacademy.org. Keep Email provider enabled. Never expose service_role keys or database passwords in frontend files.
