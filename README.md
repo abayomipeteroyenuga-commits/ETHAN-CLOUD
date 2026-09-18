@@ -1,11 +1,14 @@
-# ETHAN CLOUD v7
+# Ethan Cloud v8 — Connected Workspace
 
-Auth, UI/UX and security-focused update.
+This version turns Ethan Cloud into the central workspace for the Ethan ecosystem.
 
-- Repaired email/password account creation flow.
-- Removed localhost/current-origin dependency from sign-up/reset requests.
-- Added loading states and clearer authentication errors.
-- Reduced typography, spacing, cards, sidebar and login dimensions.
-- Retains private Supabase Storage and RLS policies.
+## Main improvements
+- New compact Home dashboard explaining what Ethan Cloud is for.
+- Quick actions: Upload, New Folder, Ethan Office, My Learning, Projects, Ethan AI.
+- Ethan ecosystem launcher for Office, Learn, LMS/ERP and AI.
+- Automatic private root folders: Ethan Office, Learning Materials, Assignments, Projects, Projects.
+- Existing My Files, Recent, Starred, Trash, upload, folders, rename, restore and private signed-file access retained.
+- Responsive, smaller typography and denser layout so more content is visible.
 
-In Supabase Authentication > URL Configuration, set Site URL to the live Vercel URL, then later to https://cloud.ethandigitalacademy.org. Keep Email provider enabled. Never expose service_role keys or database passwords in frontend files.
+## Deployment
+Keep your existing Supabase project and run supabase.sql only if the database policies/tables were not previously installed. Keep config.js with your current Supabase URL/publishable key. Upload these files to the existing Ethan Cloud GitHub repository and redeploy on Vercel.
