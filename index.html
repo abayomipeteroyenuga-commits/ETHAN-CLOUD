@@ -14,7 +14,22 @@
 const C=window.ETHAN_CLOUD_CONFIG||{},configured=!!(C.SUPABASE_URL&&C.SUPABASE_ANON_KEY&&C.BUCKET);let sb=configured?supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY):null,user=null,allFiles=[],allFolders=[],view='home',currentFolder=null,authMode='signin';const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':n<1073741824?(n/1048576).toFixed(1)+' MB':(n/1073741824).toFixed(2)+' GB';
 if(!configured)$('configNotice').classList.remove('hidden');
 function toast(t){$('toast').textContent=t;$('toast').classList.remove('hidden');clearTimeout(window._tt);window._tt=setTimeout(()=>$('toast').classList.add('hidden'),2800)}function msg(t){$('authMsg').textContent=t}function toggleMenu(force){const open=force===undefined?!$('sidebar').classList.contains('open'):force;$('sidebar').classList.toggle('open',open);$('overlay').classList.toggle('open',open)}
-async function init(){if(!sb)return;const {data}=await sb.auth.getSession();if(data.session){user=data.session.user;showApp();await refresh()}sb.auth.onAuthStateChange(async(event,s)=>{if(event==='PASSWORD_RECOVERY')$('resetModal').classList.remove('hidden');if(s?.user){user=s.user;showApp();await refresh()}else{$('auth').classList.remove('hidden')}})}
+async function init(){
+ if(!sb)return;
+ const u=new URL(location.href), ticket=u.searchParams.get('ethan_sso');
+ if(ticket){
+   msg('Connecting your Ethan ID…');
+   try{
+     const {data,error}=await sb.auth.verifyOtp({token_hash:ticket,type:'magiclink'});
+     if(error)throw error;
+     u.searchParams.delete('ethan_sso'); history.replaceState({},'',u.pathname+(u.search||'')+(u.hash||''));
+     if(data?.session?.user){user=data.session.user;showApp();await refresh();}
+   }catch(e){console.error(e);msg('Ethan ID connection expired or invalid. Please return to Ethan Hub and try again.');}
+ }
+ const {data}=await sb.auth.getSession();
+ if(data.session){user=data.session.user;showApp();await refresh()}
+ sb.auth.onAuthStateChange(async(event,s)=>{if(event==='PASSWORD_RECOVERY')$('resetModal').classList.remove('hidden');if(s?.user){user=s.user;showApp();await refresh()}else{$('auth').classList.remove('hidden')}})
+}
 function showApp(){$('auth').classList.add('hidden');$('accountEmail').textContent=user.email||'';$('avatar').textContent=((user.user_metadata?.full_name||user.email||'E')[0]).toUpperCase()}
 function toggleAuthMode(){authMode=authMode==='signin'?'signup':'signin';const s=authMode==='signup';$('authTitle').textContent=s?'Create your Ethan account':'Welcome back';$('authIntro').textContent=s?'Create one account for your private Ethan Cloud workspace.':'Sign in to your Ethan Cloud workspace.';$('fullName').classList.toggle('hidden',!s);$('confirmPassword').classList.toggle('hidden',!s);$('passwordHint').classList.toggle('hidden',!s);$('authPrimary').textContent=s?'Create account':'Sign in';$('authSwitch').textContent=s?'Back to sign in':'Create account';$('forgotBtn').classList.toggle('hidden',s);$('password').autocomplete=s?'new-password':'current-password';msg('')}
 async function submitAuth(){
