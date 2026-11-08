@@ -108,7 +108,7 @@ async function submitAuth(){
    const {data,error}=await authClient.signUp.email({email,password,name});
    if(error){authMessage(authErrorText(error,'Account creation failed. Please try again.'));return}
    const state=await sb.auth.getSession();if(state.error)throw state.error;
-   user=(state.data&&state.data.session&&state.data.session.user)||(data&&data.user)||null;
+   user=(state.data&&state.data.session&&state.data.session.user)||null;
    if(user){showApp();await refresh();authMessage('Account created. Your Ethan Cloud workspace is ready.')}
    else{
     authMode='signin';$('authTitle').textContent='Welcome back';$('authIntro').textContent='Your account was created. Sign in to open Cloud.';
