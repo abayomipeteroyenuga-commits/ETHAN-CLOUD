@@ -1,5 +1,5 @@
 window.ETHAN_CLOUD_CONFIG = {
-  SUPABASE_URL: "https://hrymakhatxjitbgpdbjk.supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_lZk0iM8AuN1ITiclDFCmZA_Sn35Fek0",
-  BUCKET: "ethan-cloud"
+  NEON_DATABASE_URL: "https://ep-still-sky-bakutesz.c-8.eu-central-1.aws.neon.tech/ethancloud",
+  NEON_AUTH_URL: "https://ep-still-sky-bakutesz.neonauth.c-8.eu-central-1.aws.neon.tech/ethancloud/auth",
+  BUCKET: "ethan-cloud-files"
 };
