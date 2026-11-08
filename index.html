@@ -35,12 +35,21 @@ try{
  sb=window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
 }catch(e){clientError=e.message==='missing-config'?'Cloud authentication is not configured. Please contact Ethan support.':e.message==='sdk-unavailable'?'The secure sign-in service did not load. Check your connection, refresh the page and try again.':'Ethan Cloud could not initialise its secure sign-in service. Please refresh the page.';}
 function toast(t){$('toast').textContent=t;$('toast').classList.remove('hidden');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>$('toast').classList.add('hidden'),3500)}
+
 function authMessage(t){$('authMsg').textContent=t||''}
-function togglePassword(id,button){const input=$(id);const reveal=input.type==='password';input.type=reveal?'text':'password';button.textContent=reveal?'Hide':'Show'}
-function closeModal(id){$(id).classList.add('hidden')}
-function toggleMenu(force){const open=force===undefined?!$('sidebar').classList.contains('open'):force;$('sidebar').classList.toggle('open',open);$('overlay').classList.toggle('open',open)}
-function showConfigError(){if(clientError){$('configNotice').textContent=clientError;$('configNotice').classList.remove('hidden');$('authPrimary').disabled=!sb;$('magicBtn').disabled=!sb;$('authSwitch').disabled=!sb;$('forgotBtn').disabled=!sb;}}
-function showApp(){if(!user)return;$('auth').classList.add('hidden');$('accountEmail').textContent=user.email||'Ethan ID account';const n=(user.user_metadata&&user.user_metadata.full_name)||user.email||'E';$('avatar').textContent=String(n).trim().charAt(0).toUpperCase()||'E';}
+function authErrorText(error,fallback){
+ const raw=String(error&&error.message?error.message:error||'').trim();
+ if(/failed to fetch|networkerror|load failed|fetch failed|network request failed|econn|err_name_not_resolved/i.test(raw)||(error&&error.name==='AuthRetryableFetchError')){
+  return 'Ethan ID could not be reached from this browser. This is not an incorrect email or password. The Ethan ID Supabase project may be paused or temporarily unavailable, or your browser/network may be blocking the connection. The project owner should check the project status in Supabase and resume it if paused. If it is active, try another network or a private browser window with extensions disabled.';
+ }
+ if(/invalid api key|no api key found|invalidapikey/i.test(raw)){
+  return 'Ethan ID rejected the configured publishable API key. Check that the public key in Ethan Cloud matches the key shown for the Ethan ID project under Supabase Settings → API Keys.';
+ }
+ if(/invalid redirect|redirect url|not allowed.*redirect/i.test(raw)){
+  return 'Supabase rejected the email confirmation redirect. Add https://cloud.ethandigitalacademy.org/** under Supabase Authentication → URL Configuration → Redirect URLs.';
+ }
+ return raw||fallback||'The authentication request could not be completed. Please try again.';
+}
 function setAuthBusy(on,label){const b=$('authPrimary');b.disabled=on;b.textContent=on?label:(authMode==='signup'?'Create account':'Sign in')}
 function toggleAuthMode(){authMode=authMode==='signin'?'signup':'signin';const signup=authMode==='signup';$('authTitle').textContent=signup?'Create your Ethan ID account':'Welcome back';$('authIntro').textContent=signup?'One Ethan ID gives you access to your private Cloud workspace.':'Sign in to your Ethan Cloud workspace.';$('fullName').classList.toggle('hidden',!signup);$('confirmPassword').classList.toggle('hidden',!signup);$('passwordHint').classList.toggle('hidden',!signup);$('authPrimary').textContent=signup?'Create account':'Sign in';$('authSwitch').textContent=signup?'Back to sign in':'Create account';$('forgotBtn').classList.toggle('hidden',signup);$('magicBtn').classList.toggle('hidden',signup);$('resendBtn').classList.add('hidden');$('password').autocomplete=signup?'new-password':'current-password';$('password').value='';$('confirmPassword').value='';authMessage('');}
 async function submitAuth(){
@@ -56,39 +65,39 @@ async function submitAuth(){
    if(password.length<8){authMessage('Password must contain at least 8 characters.');return}
    if(password!==confirm){authMessage('The passwords do not match.');return}
    const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:redirectUrl}});
-   if(error){authMessage(error.message||'Account creation failed. Please try again.');return}
+   if(error){authMessage(authErrorText(error,'Account creation failed. Please try again.'));return}
    if(data&&data.session){authMessage('Account created. Opening Ethan Cloud…')}
    else{$('resendBtn').classList.remove('hidden');authMessage('Account created. Check your inbox and spam folder for the confirmation email, then return to sign in.')}
   }else{
    const {data,error}=await sb.auth.signInWithPassword({email,password});
-   if(error){authMessage(error.message||'Sign-in failed. Check your email and password.');if(/confirm|not confirmed/i.test(error.message||''))$('resendBtn').classList.remove('hidden');return}
+   if(error){authMessage(authErrorText(error,'Sign-in failed. Check your email and password.'));if(/confirm|not confirmed/i.test(error.message||''))$('resendBtn').classList.remove('hidden');return}
    if(data&&data.user){user=data.user;showApp();await refresh()}
   }
- }catch(e){console.error('Ethan Cloud authentication error:',e);authMessage('We could not connect to the sign-in service. Check your connection and try again.')}
+ }catch(e){console.error('Ethan Cloud authentication error:',e);authMessage(authErrorText(e,'The sign-in service could not be reached. Please try again.'))}
  finally{setAuthBusy(false)}
 }
 async function sendMagicLink(){
  if(!sb)return authMessage(clientError||'Secure sign-in is unavailable.');
  const email=$('email').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authMessage('Enter your email address first.');
  const b=$('magicBtn');b.disabled=true;b.textContent='Sending link…';authMessage('');
- try{const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirectUrl,shouldCreateUser:false}});authMessage(error?error.message:'A sign-in link has been requested. Check your inbox and spam folder.');}
- catch(e){authMessage('Unable to send the sign-in link. Please try again.')}
+ try{const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirectUrl,shouldCreateUser:false}});authMessage(error?authErrorText(error,'Could not send the sign-in link.'):'A sign-in link has been requested. Check your inbox and spam folder.');}
+ catch(e){authMessage(authErrorText(e,'Unable to send the sign-in link. Please try again.'))}
  finally{b.disabled=false;b.textContent='Email me a sign-in link'}
 }
 async function resendConfirmation(){
  if(!sb)return authMessage(clientError||'Secure sign-in is unavailable.');
  const email=$('email').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authMessage('Enter your email address first.');
  const b=$('resendBtn');b.disabled=true;b.textContent='Sending…';
- try{const {error}=await sb.auth.resend({type:'signup',email,options:{emailRedirectTo:redirectUrl}});authMessage(error?error.message:'A new confirmation email has been requested. Check your inbox.')}
- catch(e){authMessage('Unable to resend the confirmation email. Please try again.')}
+ try{const {error}=await sb.auth.resend({type:'signup',email,options:{emailRedirectTo:redirectUrl}});authMessage(error?authErrorText(error,'Could not resend confirmation.'):'A new confirmation email has been requested. Check your inbox.')}
+ catch(e){authMessage(authErrorText(e,'Unable to resend the confirmation email. Please try again.'))}
  finally{b.disabled=false;b.textContent='Resend confirmation'}
 }
 async function forgotPassword(){
  if(!sb)return authMessage(clientError||'Secure sign-in is unavailable.');
  const email=$('email').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authMessage('Enter your email address first.');
  const b=$('forgotBtn');b.disabled=true;b.textContent='Sending…';
- try{const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:redirectUrl});authMessage(error?error.message:'Password reset email requested. Follow the secure link in your inbox.')}
- catch(e){authMessage('Unable to send the password reset email. Please try again.')}
+ try{const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:redirectUrl});authMessage(error?authErrorText(error,'Could not send password reset email.'):'Password reset email requested. Follow the secure link in your inbox.')}
+ catch(e){authMessage(authErrorText(e,'Unable to send the password reset email. Please try again.'))}
  finally{b.disabled=false;b.textContent='Forgot password?'}
 }
 async function saveNewPassword(){
@@ -114,7 +123,7 @@ async function init(){
   catch(e){console.warn('Ethan ID secure handoff could not be verified:',e);authMessage('The Ethan ID connection has expired or is invalid. Return to Ethan Hub and try again.')}
  }
  const {data,error}=await sb.auth.getSession();
- if(error){console.warn('Session lookup failed:',error.message);authMessage('Your saved session could not be restored. Please sign in again.')}
+ if(error){console.warn('Session lookup failed:',error.message);authMessage(authErrorText(error,'Your saved session could not be restored. Please sign in again.'))}
  if(data&&data.session&&data.session.user){user=data.session.user;showApp();await refresh()}
 }
 async function loadRows(table){
