@@ -1,4 +1,19 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071b33"><meta name="description" content="Ethan Cloud — secure personal and team file storage across the Ethan ecosystem."><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/ethan-cloud-icon.svg" type="image/svg+xml"><title>Ethan Cloud | Secure Workspace</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script><script src="config.js"></script><style>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071b33"><meta name="description" content="Ethan Cloud — secure personal and team file storage across the Ethan ecosystem."><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/ethan-cloud-icon.svg" type="image/svg+xml"><title>Ethan Cloud | Secure Workspace</title><script src="config.js"></script>
+<script type="module">
+import { createClient } from "https://esm.sh/@neon/neon-js@latest/supabase?bundle";
+import { createAuthClient } from "https://esm.sh/@neon/neon-js@latest/auth?bundle";
+try {
+  const config = window.ETHAN_CLOUD_CONFIG || {};
+  if (!config.NEON_AUTH_URL || !config.NEON_DATA_API_URL) throw new Error("Neon Cloud configuration is incomplete.");
+  window.ETHAN_NEON_CLIENT = createClient({ auth: { url: config.NEON_AUTH_URL }, dataApi: { url: config.NEON_DATA_API_URL } });
+  window.ETHAN_NEON_AUTH_CLIENT = createAuthClient(config.NEON_AUTH_URL);
+  window.dispatchEvent(new Event("ethan-neon-ready"));
+} catch (error) {
+  console.error("Ethan Cloud Neon initialisation failed:", error);
+  window.ETHAN_NEON_INIT_ERROR = error && error.message ? error.message : "Unable to load Neon services.";
+  window.dispatchEvent(new Event("ethan-neon-error"));
+}
+</script><style>
 :root{--navy:#071b33;--navy2:#0c315d;--blue:#0a66ff;--cyan:#16b9f5;--bg:#f4f7fb;--line:#e2e8f0;--text:#152033;--muted:#68758a;--white:#fff;--danger:#c62828}*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}.topbar{height:64px;background:#fff;border-bottom:1px solid var(--line);display:grid;grid-template-columns:220px minmax(220px,680px) 1fr;align-items:center;padding:0 18px;gap:18px;position:sticky;top:0;z-index:10}.brand{display:flex;align-items:center;gap:10px;font-weight:900;color:var(--navy);white-space:nowrap}.brand-logo{width:40px;height:40px;object-fit:contain;border-radius:9px}.brand-word{font-size:16px}.brand-word b{color:var(--blue)}.search{position:relative}.search input{width:100%;padding:13px 44px 13px 16px;border:1px solid var(--line);border-radius:13px;background:#f7f9fc;outline:none}.search input:focus{border-color:#9fc1ff;background:#fff}.search span{position:absolute;right:15px;top:12px;color:var(--muted)}.account{display:flex;justify-content:flex-end;align-items:center;gap:10px}.account-email{font-size:13px;color:var(--muted);max-width:190px;overflow:hidden;text-overflow:ellipsis}.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;display:grid;place-items:center;font-weight:800;border:0}.menuBtn{display:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px}.shell{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:calc(100vh - 64px)}aside{background:#fff;border-right:1px solid var(--line);padding:15px 11px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}.new{width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--blue),#3185ff);color:#fff;font-weight:800;box-shadow:0 7px 18px #0a66ff25}.nav{margin-top:18px}.nav button{width:100%;display:flex;gap:10px;align-items:center;text-align:left;padding:11px 12px;margin:3px 0;border:0;background:transparent;border-radius:9px;color:#354158}.nav button.active,.nav button:hover{background:#eef4ff;color:var(--blue)}.storage{margin-top:24px;padding:12px;border-top:1px solid var(--line)}.bar{height:7px;background:#e8edf4;border-radius:9px;overflow:hidden;margin:8px 0}.bar i{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan))}.secondary,.iconBtn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 10px}.secondary:hover,.iconBtn:hover{background:#f7f9fc}.danger{color:var(--danger)}main{padding:20px;min-width:0}.hero{background:linear-gradient(120deg,var(--navy),var(--navy2) 62%,#0d5597);color:#fff;border-radius:16px;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 10px 28px #071b3315}.hero h1{margin:0 0 6px;font-size:clamp(20px,2.4vw,28px)}.hero p{margin:0;color:#dbe7f5}.heroActions{display:flex;gap:10px;flex-wrap:wrap}.upload{padding:12px 17px;border-radius:10px;border:0;background:#fff;color:var(--navy);font-weight:800}.upload.alt{background:#ffffff18;color:#fff;border:1px solid #ffffff45}.crumbs{display:flex;align-items:center;gap:7px;margin:22px 0 2px;font-size:13px;color:var(--muted);flex-wrap:wrap}.crumbs button{border:0;background:transparent;color:var(--blue);padding:2px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:24px 0 12px}.section-head h2{font-size:18px;margin:0}.status{font-size:13px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:11px}.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px;min-height:112px;position:relative;overflow:hidden}.card:hover{box-shadow:0 8px 24px #12233b12;border-color:#d3ddeb}.folderCard{cursor:pointer}.icon{font-size:24px}.name{font-weight:750;margin-top:10px;font-size:13px;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted);margin-top:5px}.actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}.actions button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 8px;font-size:12px}.empty{background:#fff;border:1px dashed #cbd5e1;border-radius:14px;padding:38px;text-align:center;color:var(--muted);grid-column:1/-1}.auth{position:fixed;inset:0;background:linear-gradient(135deg,#f8fbff,#eef4fb);z-index:30;display:grid;place-items:center;padding:14px;overflow:auto}.authbox{background:#fff;width:min(820px,100%);min-height:470px;border:1px solid var(--line);border-radius:20px;box-shadow:0 18px 50px #071b3320;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}.authVisual{background:linear-gradient(145deg,var(--navy),#0b477f);color:#fff;padding:28px;display:flex;flex-direction:column;justify-content:space-between}.authVisual img{width:96px;height:96px;object-fit:contain;background:#fff;border-radius:16px;padding:5px}.authVisual h1{font-size:28px;margin:14px 0 6px}.authVisual p{color:#dce9f7;line-height:1.5;font-size:13px}.features{display:grid;gap:7px;font-size:12px;color:#e8f3ff}.authForm{padding:30px 32px;display:flex;flex-direction:column;justify-content:center}.authForm h2{font-size:22px;margin:0 0 5px}.authForm>p{color:var(--muted);margin:0 0 20px}.field{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;margin:5px 0;outline:none;font-size:13px}.field:focus{border-color:#8eb8ff}.primary{width:100%;padding:11px;border:0;border-radius:10px;background:var(--blue);color:#fff;font-weight:800;margin-top:6px;font-size:13px}.row{display:flex;gap:8px}.notice{padding:10px;border-radius:9px;background:#eef4ff;color:#174a9c;margin:10px 0;font-size:13px}.authMsg{min-height:20px;font-size:13px;color:#526176}.overlay{position:fixed;inset:0;background:#071b3355;z-index:25;display:none}.toast{position:fixed;right:20px;bottom:20px;z-index:50;background:#071b33;color:#fff;padding:12px 16px;border-radius:11px;box-shadow:0 10px 30px #0002;max-width:360px}.modal{position:fixed;inset:0;background:#071b3366;z-index:45;display:grid;place-items:center;padding:20px}.modalBox{width:min(420px,100%);background:#fff;border-radius:18px;padding:24px}.modalBox h3{margin-top:0}.modalActions{display:flex;gap:8px;margin-top:12px}.modalActions button{flex:1}
 .homeDash{display:grid;gap:14px;margin-top:14px}.quickGrid{display:grid;grid-template-columns:repeat(6,minmax(105px,1fr));gap:9px}.quick{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:left;min-height:92px}.quick:hover{border-color:#a9c8ff;box-shadow:0 6px 18px #12233b0d}.quick .qicon{font-size:21px}.quick b{display:block;margin-top:8px;font-size:12px}.quick small{display:block;color:var(--muted);font-size:10px;margin-top:3px;line-height:1.25}.ecosystem{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.eco{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px}.eco strong{font-size:12px}.eco span{font-size:10px;color:var(--muted);display:block;margin-top:2px}.eco button{margin-left:auto;border:1px solid var(--line);background:#f7f9fc;border-radius:8px;padding:6px 8px;font-size:10px}.homeTitle{font-size:15px;margin:2px 0 8px}.homeRecent{margin-top:2px}.purpose{font-size:11px;color:#dbe7f5;margin-top:5px}.hero.compact{padding:16px 18px}.hero.compact h1{font-size:21px}.hero.compact p{font-size:12px}.section-head{margin:18px 0 9px}.nav button{font-size:12px;padding:9px 10px}.new{padding:11px;font-size:12px}main{padding:16px}.card{min-height:100px}.grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}@media(max-width:1100px){.quickGrid{grid-template-columns:repeat(3,1fr)}.ecosystem{grid-template-columns:1fr 1fr}}@media(max-width:700px){.quickGrid{grid-template-columns:repeat(2,1fr)}.ecosystem{grid-template-columns:1fr}.quick{min-height:84px}}
 @media(max-width:900px){.topbar{grid-template-columns:auto 1fr auto}.brand-word,.account-email{display:none}.shell{grid-template-columns:190px 1fr}aside{width:190px}}
@@ -11,49 +26,74 @@
 @media(max-width:760px){.fileToolbar{align-items:flex-start;flex-direction:column}.toolbarControls{width:100%}.toolbarSelect{flex:1;min-width:110px}.grid.listView .fileCard{display:block}.grid.listView .fileCard .fileActions{margin-top:10px;justify-content:flex-start}.fileCard .fileActions button{padding:7px 9px}.modalWide{max-height:94vh}.previewBody iframe{height:55vh}.authLinks{flex-direction:row!important}.authLinks button{font-size:11px!important}.dropPanel{padding:34px 22px}}
 @media(max-width:420px){.authLinks{flex-direction:column!important}.toolbarControls{display:grid;grid-template-columns:1fr 1fr;width:100%}.toolbarSelect{min-width:0}.viewToggle{grid-column:1/-1}.fileCard .fileActions button{font-size:10px;padding:6px 7px}}
 </style></head><body>
-<div id="auth" class="auth"><div class="authbox"><section class="authVisual"><div><img src="ethan-cloud-logo.png" alt="Ethan Cloud logo"><h1>ETHAN CLOUD</h1><p>One secure workspace for your documents, learning materials and projects across the Ethan ecosystem.</p></div><div class="features"><span>✓ Private files by default</span><span>✓ Access from any device</span><span>✓ Built for Ethan Learn, Office and LMS</span></div></section><section class="authForm"><h2 id="authTitle">Welcome back</h2><p id="authIntro">Sign in to your Ethan Cloud workspace.</p><div id="configNotice" class="notice hidden" role="alert"></div><input id="fullName" class="field hidden" type="text" placeholder="Full name" autocomplete="name"><input id="email" class="field" type="email" placeholder="Email address" autocomplete="email"><div class="passwordWrap"><input id="password" class="field" type="password" placeholder="Password" autocomplete="current-password"><button type="button" class="passwordToggle" onclick="togglePassword('password',this)">Show</button></div><input id="confirmPassword" class="field hidden" type="password" placeholder="Confirm password" autocomplete="new-password"><div id="passwordHint" class="authMsg hidden">Use at least 8 characters, including a mix of letters and numbers.</div><button id="authPrimary" class="primary" onclick="submitAuth()">Sign in</button><div class="row authLinks"><button id="authSwitch" class="secondary" style="flex:1" onclick="toggleAuthMode()">Create account</button><button id="forgotBtn" class="secondary" style="flex:1" onclick="forgotPassword()">Forgot password?</button></div><div class="row authLinks"><button id="magicBtn" class="secondary" style="flex:1" onclick="sendMagicLink()">Email me a sign-in link</button><button id="resendBtn" class="secondary hidden" style="flex:1" onclick="resendConfirmation()">Resend confirmation</button></div><p id="authMsg" class="authMsg" aria-live="polite"></p></section></div></div>
+<div id="auth" class="auth"><div class="authbox"><section class="authVisual"><div><img src="ethan-cloud-logo.png" alt="Ethan Cloud logo"><h1>ETHAN CLOUD</h1><p>Your independent cloud workspace for documents, learning materials and projects.</p></div><div class="features"><span>✓ Private files by default</span><span>✓ Access from any device</span><span>✓ Built for Ethan Learn, Office and LMS</span></div></section><section class="authForm"><h2 id="authTitle">Welcome back</h2><p id="authIntro">Sign in to your Ethan Cloud workspace.</p><div id="configNotice" class="notice hidden" role="alert"></div><input id="fullName" class="field hidden" type="text" placeholder="Full name" autocomplete="name"><input id="email" class="field" type="email" placeholder="Email address" autocomplete="email"><div class="passwordWrap"><input id="password" class="field" type="password" placeholder="Password" autocomplete="current-password"><button type="button" class="passwordToggle" onclick="togglePassword('password',this)">Show</button></div><input id="confirmPassword" class="field hidden" type="password" placeholder="Confirm password" autocomplete="new-password"><div id="passwordHint" class="authMsg hidden">Use at least 8 characters, including a mix of letters and numbers.</div><button id="authPrimary" class="primary" onclick="submitAuth()">Sign in</button><div class="row authLinks"><button id="authSwitch" class="secondary" style="flex:1" onclick="toggleAuthMode()">Create account</button><button id="forgotBtn" class="secondary" style="flex:1" onclick="forgotPassword()">Forgot password?</button></div><p class="authMsg">Your Ethan Cloud account is independent. No shared identity account is required.</p><p id="authMsg" class="authMsg" aria-live="polite"></p></section></div></div>
 <header class="topbar"><div class="brand"><button class="menuBtn" onclick="toggleMenu()">☰</button><img class="brand-logo" src="ethan-cloud-logo.png" alt="Ethan Cloud"><span class="brand-word">ETHAN <b>CLOUD</b></span></div><div class="search"><input id="search" placeholder="Search files and folders"><span>⌕</span></div><div class="account"><span id="accountEmail" class="account-email"></span><button id="avatar" class="avatar" onclick="signOut()" title="Sign out">E</button></div></header>
 <div id="overlay" class="overlay" onclick="toggleMenu(false)"></div><div class="shell"><aside id="sidebar"><button class="new" onclick="pickFile();toggleMenu(false)">＋ Upload files</button><div class="nav"><button class="active" onclick="setView('home',this)">⌂ Home</button><button onclick="setView('files',this)">▣ My Files</button><button onclick="setView('recent',this)">◷ Recent</button><button onclick="setView('starred',this)">★ Starred</button><button onclick="setView('trash',this)">▤ Trash</button></div><div class="storage"><small>Storage used</small><div class="bar"><i id="usageBar"></i></div><small id="usageText">0 MB used</small><br><button class="secondary" style="margin-top:12px;width:100%" onclick="signOut()">Sign out</button></div></aside><main><section class="hero compact"><div><h1>Welcome to Ethan Cloud</h1><p>Your secure workspace for files, learning and Ethan apps.</p><div class="purpose">Store once • work across Ethan Office • learn with Ethan Learn • use files with Ethan AI</div></div><div class="heroActions"><button class="upload" onclick="pickFile()">Upload</button><button class="upload alt" onclick="newFolder()">New folder</button></div></section><section id="homeDash" class="homeDash"><div><h2 class="homeTitle">What would you like to do?</h2><div class="quickGrid"><button class="quick" onclick="pickFile()"><span class="qicon">⬆️</span><b>Upload File</b><small>Keep documents, images and projects.</small></button><button class="quick" onclick="newFolder()"><span class="qicon">📁</span><b>New Folder</b><small>Organize your cloud workspace.</small></button><button class="quick" onclick="openApp('office')"><span class="qicon">📝</span><b>Ethan Office</b><small>Create Word, Excel and presentations.</small></button><button class="quick" onclick="openSystemFolder('Learning Materials')"><span class="qicon">🎓</span><b>My Learning</b><small>Keep course materials and assignments.</small></button><button class="quick" onclick="openApp('ai')"><span class="qicon">✨</span><b>Ask Ethan AI</b><small>Open Ethan AI for study and document help.</small></button></div></div><div><h2 class="homeTitle">Ethan ecosystem</h2><div class="ecosystem"><div class="eco"><div>📝</div><div><strong>Ethan Office</strong><span>Create and manage documents.</span></div><button onclick="openApp('office')">Open</button></div><div class="eco"><div>🎓</div><div><strong>Ethan Learn</strong><span>Study courses and learning content.</span></div><button onclick="openApp('learn')">Open</button></div><div class="eco"><div>🏫</div><div><strong>LMS & ERP</strong><span>Courses, enrollment and student services.</span></div><button onclick="openApp('lms')">Open</button></div><div class="eco"><div>✨</div><div><strong>Ethan AI</strong><span>AI search, study and content tools.</span></div><button onclick="openApp('ai')">Open</button></div><div class="eco"><div>☁️</div><div><strong>My Files</strong><span>Your private Ethan workspace.</span></div><button onclick="openMyFiles()">Open</button></div><div class="eco"><div>📂</div><div><strong>Assignments</strong><span>Keep school and course submissions.</span></div><button onclick="openSystemFolder('Assignments')">Open</button></div></div></div></section><div id="fileArea"><div id="crumbs" class="crumbs"></div><div id="fileToolbar" class="fileToolbar"><div class="toolbarLabel">Workspace files</div><div class="toolbarControls"><select id="typeFilter" class="toolbarSelect" aria-label="Filter files"><option value="all">All file types</option><option value="documents">Documents</option><option value="images">Images</option><option value="videos">Videos</option><option value="audio">Audio</option><option value="archives">Archives</option></select><select id="sortBy" class="toolbarSelect" aria-label="Sort files"><option value="updated">Recently updated</option><option value="name">Name A–Z</option><option value="size">Largest first</option><option value="created">Newest first</option><option value="type">File type</option></select><button id="viewToggle" class="secondary viewToggle" onclick="toggleFileLayout()" title="Switch file layout">☷ List view</button></div></div><div class="section-head"><h2 id="folderHeading">Folders</h2><span id="folderCount" class="status"></span></div><div class="grid" id="folders"></div><div class="section-head"><h2 id="fileHeading">My files</h2><span id="status" class="status">Private by default</span></div><div id="files" class="empty">Loading…</div></div><input id="picker" type="file" multiple hidden></main></div><div id="toast" class="toast hidden"></div>
-<div id="resetModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><div class="modalBox"><h3 id="resetTitle">Set a new password</h3><p class="modalHelp">Choose a new password for your Ethan ID account.</p><input id="newPassword" class="field" type="password" autocomplete="new-password" placeholder="New password (8+ characters)"><input id="newPassword2" class="field" type="password" autocomplete="new-password" placeholder="Confirm new password"><div class="modalActions"><button class="primary" onclick="saveNewPassword()">Update password</button><button class="secondary" onclick="closeModal('resetModal')">Cancel</button></div><p id="resetMsg" class="authMsg"></p></div></div>
+<div id="resetModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><div class="modalBox"><h3 id="resetTitle">Set a new password</h3><p class="modalHelp">Choose a new password for your Ethan Cloud account.</p><input id="newPassword" class="field" type="password" autocomplete="new-password" placeholder="New password (8+ characters)"><input id="newPassword2" class="field" type="password" autocomplete="new-password" placeholder="Confirm new password"><div class="modalActions"><button class="primary" onclick="saveNewPassword()">Update password</button><button class="secondary" onclick="closeModal('resetModal')">Cancel</button></div><p id="resetMsg" class="authMsg"></p></div></div>
 <div id="previewModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="modalBox modalWide"><div class="modalTop"><h3 id="previewTitle">File preview</h3><button class="iconBtn" onclick="closeModal('previewModal')" aria-label="Close preview">✕</button></div><div id="previewBody" class="previewBody"></div><div class="modalActions"><button id="previewDownload" class="primary">Download file</button><button class="secondary" onclick="closeModal('previewModal')">Close</button></div></div></div>
 <div id="shareModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="shareTitle"><div class="modalBox"><div class="modalTop"><h3 id="shareTitle">Share file securely</h3><button class="iconBtn" onclick="closeModal('shareModal')" aria-label="Close share dialog">✕</button></div><p class="modalHelp">Create a private, time-limited link. Anyone who has the link can access this file until it expires.</p><label class="modalLabel" for="shareExpiry">Link expires after</label><select id="shareExpiry" class="field"><option value="3600">1 hour</option><option value="86400" selected>24 hours</option><option value="604800">7 days</option></select><button id="generateShareBtn" class="primary" onclick="generateShareLink()">Generate secure link</button><div id="shareResult" class="shareResult hidden"><input id="shareUrl" class="field" readonly aria-label="Secure share link"><button class="primary" onclick="copyShareLink()">Copy link</button></div><p class="modalHelp">This is a temporary signed link, not a permanent public file. You can stop access by deleting the file; otherwise the link expires automatically.</p><p id="shareMsg" class="authMsg"></p></div></div>
 <div id="moveModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="moveTitle"><div class="modalBox"><h3 id="moveTitle">Move file</h3><p class="modalHelp">Choose a destination folder. Select My Files to move it to the root.</p><select id="moveTarget" class="field"></select><div class="modalActions"><button class="primary" onclick="confirmMove()">Move file</button><button class="secondary" onclick="closeModal('moveModal')">Cancel</button></div><p id="moveMsg" class="authMsg"></p></div></div>
 <div id="dropMask" class="dropMask hidden"><div class="dropPanel"><div class="dropIcon">☁</div><h2>Drop files to upload</h2><p>Your files stay private in your Ethan Cloud workspace.</p></div></div>
 <script>
 const C=window.ETHAN_CLOUD_CONFIG||{};
-const configReady=!!(C.SUPABASE_URL&&C.SUPABASE_ANON_KEY&&C.BUCKET);
-const sdkReady=!!(window.supabase&&typeof window.supabase.createClient==='function');
-let sb=null,clientError='',user=null,allFiles=[],allFolders=[],view='home',currentFolder=null,authMode='signin',layoutMode='grid',shareFileId=null,moveFileId=null,activePreviewId=null,refreshPromise=null;
+const configReady=!!(C.NEON_AUTH_URL&&C.NEON_DATA_API_URL&&C.BUCKET);
+let sb=window.ETHAN_NEON_CLIENT||null,authClient=window.ETHAN_NEON_AUTH_CLIENT||null,clientError=window.ETHAN_NEON_INIT_ERROR||'',user=null,allFiles=[],allFolders=[],view='home',currentFolder=null,authMode='signin',layoutMode='grid',shareFileId=null,moveFileId=null,activePreviewId=null,refreshPromise=null;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':n<1073741824?(n/1048576).toFixed(1)+' MB':(n/1073741824).toFixed(2)+' GB';
 const appLinks={office:'https://office.ethandigitalacademy.org',learn:'https://learn.ethandigitalacademy.org',lms:'https://app.ethandigitalacademy.org',ai:'https://search.ethandigitalacademy.org'};
 const redirectUrl='https://cloud.ethandigitalacademy.org/';
-try{
- if(!configReady)throw new Error('missing-config');
- if(!sdkReady)throw new Error('sdk-unavailable');
- sb=window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
-}catch(e){clientError=e.message==='missing-config'?'Cloud authentication is not configured. Please contact Ethan support.':e.message==='sdk-unavailable'?'The secure sign-in service did not load. Check your connection, refresh the page and try again.':'Ethan Cloud could not initialise its secure sign-in service. Please refresh the page.';}
 function toast(t){$('toast').textContent=t;$('toast').classList.remove('hidden');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>$('toast').classList.add('hidden'),3500)}
+function showConfigError(){
+ const notice=$('configNotice');
+ if(!configReady||!sb||!authClient){
+  notice.textContent=clientError||'Neon services are not ready. Refresh the page and try again.';
+  notice.classList.remove('hidden');
+ }else notice.classList.add('hidden');
+}
+function showApp(){
+ $('auth').classList.add('hidden');
+ $('accountEmail').textContent=user&&user.email?user.email:'';
+ const label=(user&&(user.name||user.email)||'E').trim();
+ $('avatar').textContent=label.charAt(0).toUpperCase()||'E';
+}
+function closeModal(id){const node=$(id);if(node)node.classList.add('hidden')}
+function toggleMenu(force){
+ const open=typeof force==='boolean'?force:!$('sidebar').classList.contains('open');
+ $('sidebar').classList.toggle('open',open);$('overlay').classList.toggle('open',open);
+}
+function togglePassword(id,button){
+ const field=$(id);if(!field)return;
+ const visible=field.type==='password';field.type=visible?'text':'password';
+ if(button)button.textContent=visible?'Hide':'Show';
+}
 
 function authMessage(t){$('authMsg').textContent=t||''}
 function authErrorText(error,fallback){
  const raw=String(error&&error.message?error.message:error||'').trim();
- if(/failed to fetch|networkerror|load failed|fetch failed|network request failed|econn|err_name_not_resolved/i.test(raw)||(error&&error.name==='AuthRetryableFetchError')){
-  return 'Ethan ID could not be reached from this browser. This is not an incorrect email or password. The Ethan ID Supabase project may be paused or temporarily unavailable, or your browser/network may be blocking the connection. The project owner should check the project status in Supabase and resume it if paused. If it is active, try another network or a private browser window with extensions disabled.';
+ if(/failed to fetch|networkerror|load failed|fetch failed|network request failed|econn|err_name_not_resolved/i.test(raw)){
+  return 'Ethan Cloud could not reach Neon. Check your internet connection and refresh the page. This is a connection issue, not necessarily an incorrect password.';
  }
- if(/invalid api key|no api key found|invalidapikey/i.test(raw)){
-  return 'Ethan ID rejected the configured publishable API key. Check that the public key in Ethan Cloud matches the key shown for the Ethan ID project under Supabase Settings → API Keys.';
+ if(/invalid.*credential|invalid email or password|incorrect email or password/i.test(raw)){
+  return 'Email or password is incorrect. Check your details and try again.';
  }
- if(/invalid redirect|redirect url|not allowed.*redirect/i.test(raw)){
-  return 'Supabase rejected the email confirmation redirect. Add https://cloud.ethandigitalacademy.org/** under Supabase Authentication → URL Configuration → Redirect URLs.';
+ if(/rate.?limit|too many requests|too_many_attempts/i.test(raw)){
+  return 'Too many attempts were made. Please wait a moment before trying again.';
  }
  return raw||fallback||'The authentication request could not be completed. Please try again.';
 }
 function setAuthBusy(on,label){const b=$('authPrimary');b.disabled=on;b.textContent=on?label:(authMode==='signup'?'Create account':'Sign in')}
-function toggleAuthMode(){authMode=authMode==='signin'?'signup':'signin';const signup=authMode==='signup';$('authTitle').textContent=signup?'Create your Ethan ID account':'Welcome back';$('authIntro').textContent=signup?'One Ethan ID gives you access to your private Cloud workspace.':'Sign in to your Ethan Cloud workspace.';$('fullName').classList.toggle('hidden',!signup);$('confirmPassword').classList.toggle('hidden',!signup);$('passwordHint').classList.toggle('hidden',!signup);$('authPrimary').textContent=signup?'Create account':'Sign in';$('authSwitch').textContent=signup?'Back to sign in':'Create account';$('forgotBtn').classList.toggle('hidden',signup);$('magicBtn').classList.toggle('hidden',signup);$('resendBtn').classList.add('hidden');$('password').autocomplete=signup?'new-password':'current-password';$('password').value='';$('confirmPassword').value='';authMessage('');}
+function toggleAuthMode(){
+ authMode=authMode==='signin'?'signup':'signin';const signup=authMode==='signup';
+ $('authTitle').textContent=signup?'Create your Ethan Cloud account':'Welcome back';
+ $('authIntro').textContent=signup?'Set up a free, independent account for your private Cloud workspace.':'Sign in to your Ethan Cloud workspace.';
+ $('fullName').classList.toggle('hidden',!signup);$('confirmPassword').classList.toggle('hidden',!signup);$('passwordHint').classList.toggle('hidden',!signup);
+ $('authPrimary').textContent=signup?'Create account':'Sign in';$('authSwitch').textContent=signup?'Back to sign in':'Create account';
+ $('forgotBtn').classList.toggle('hidden',signup);$('password').autocomplete=signup?'new-password':'current-password';
+ $('password').value='';$('confirmPassword').value='';authMessage('');
+}
 async function submitAuth(){
- if(!sb)return authMessage(clientError||'Secure sign-in is unavailable.');
+ if(!sb||!authClient)return authMessage(clientError||'Neon sign-in is unavailable.');
  const email=$('email').value.trim().toLowerCase(),password=$('password').value;
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authMessage('Enter a valid email address.');
  if(!password)return authMessage('Enter your password.');
@@ -63,67 +103,67 @@ async function submitAuth(){
    const name=$('fullName').value.trim(),confirm=$('confirmPassword').value;
    if(name.length<2){authMessage('Enter your full name.');return}
    if(password.length<8){authMessage('Password must contain at least 8 characters.');return}
+   if(password.length>128){authMessage('Password must be 128 characters or fewer.');return}
    if(password!==confirm){authMessage('The passwords do not match.');return}
-   const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:redirectUrl}});
+   const {data,error}=await authClient.signUp.email({email,password,name});
    if(error){authMessage(authErrorText(error,'Account creation failed. Please try again.'));return}
-   if(data&&data.session){authMessage('Account created. Opening Ethan Cloud…')}
-   else{$('resendBtn').classList.remove('hidden');authMessage('Account created. Check your inbox and spam folder for the confirmation email, then return to sign in.')}
+   const state=await sb.auth.getSession();if(state.error)throw state.error;
+   user=(state.data&&state.data.session&&state.data.session.user)||(data&&data.user)||null;
+   if(user){showApp();await refresh();authMessage('Account created. Your Ethan Cloud workspace is ready.')}
+   else{
+    authMode='signin';$('authTitle').textContent='Welcome back';$('authIntro').textContent='Your account was created. Sign in to open Cloud.';
+    $('fullName').classList.add('hidden');$('confirmPassword').classList.add('hidden');$('passwordHint').classList.add('hidden');
+    $('authPrimary').textContent='Sign in';$('authSwitch').textContent='Create account';
+    authMessage('Account created successfully. Sign in with your new email and password.');
+   }
   }else{
-   const {data,error}=await sb.auth.signInWithPassword({email,password});
-   if(error){authMessage(authErrorText(error,'Sign-in failed. Check your email and password.'));if(/confirm|not confirmed/i.test(error.message||''))$('resendBtn').classList.remove('hidden');return}
-   if(data&&data.user){user=data.user;showApp();await refresh()}
+   const {data,error}=await authClient.signIn.email({email,password});
+   if(error){authMessage(authErrorText(error,'Sign-in failed. Check your email and password.'));return}
+   user=data&&data.user?data.user:null;
+   if(!user){const state=await sb.auth.getSession();if(state.error)throw state.error;user=state.data&&state.data.session?state.data.session.user:null}
+   if(user){showApp();await refresh()}else authMessage('Sign-in completed, but the session could not be loaded. Refresh and try again.');
   }
- }catch(e){console.error('Ethan Cloud authentication error:',e);authMessage(authErrorText(e,'The sign-in service could not be reached. Please try again.'))}
+ }catch(e){console.error('Ethan Cloud authentication error:',e);authMessage(authErrorText(e,'Neon authentication could not be reached. Please try again.'))}
  finally{setAuthBusy(false)}
 }
-async function sendMagicLink(){
- if(!sb)return authMessage(clientError||'Secure sign-in is unavailable.');
- const email=$('email').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authMessage('Enter your email address first.');
- const b=$('magicBtn');b.disabled=true;b.textContent='Sending link…';authMessage('');
- try{const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirectUrl,shouldCreateUser:false}});authMessage(error?authErrorText(error,'Could not send the sign-in link.'):'A sign-in link has been requested. Check your inbox and spam folder.');}
- catch(e){authMessage(authErrorText(e,'Unable to send the sign-in link. Please try again.'))}
- finally{b.disabled=false;b.textContent='Email me a sign-in link'}
-}
-async function resendConfirmation(){
- if(!sb)return authMessage(clientError||'Secure sign-in is unavailable.');
- const email=$('email').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authMessage('Enter your email address first.');
- const b=$('resendBtn');b.disabled=true;b.textContent='Sending…';
- try{const {error}=await sb.auth.resend({type:'signup',email,options:{emailRedirectTo:redirectUrl}});authMessage(error?authErrorText(error,'Could not resend confirmation.'):'A new confirmation email has been requested. Check your inbox.')}
- catch(e){authMessage(authErrorText(e,'Unable to resend the confirmation email. Please try again.'))}
- finally{b.disabled=false;b.textContent='Resend confirmation'}
-}
 async function forgotPassword(){
- if(!sb)return authMessage(clientError||'Secure sign-in is unavailable.');
+ if(!authClient)return authMessage(clientError||'Neon password reset is unavailable.');
  const email=$('email').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authMessage('Enter your email address first.');
  const b=$('forgotBtn');b.disabled=true;b.textContent='Sending…';
- try{const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:redirectUrl});authMessage(error?authErrorText(error,'Could not send password reset email.'):'Password reset email requested. Follow the secure link in your inbox.')}
- catch(e){authMessage(authErrorText(e,'Unable to send the password reset email. Please try again.'))}
+ try{
+  const {error}=await authClient.requestPasswordReset({email,redirectTo:redirectUrl});
+  authMessage(error?authErrorText(error,'Could not send the password reset email.'):'Password reset instructions have been requested. Check your inbox and spam folder.');
+ }catch(e){authMessage(authErrorText(e,'Unable to send the password reset email. Please try again.'))}
  finally{b.disabled=false;b.textContent='Forgot password?'}
 }
 async function saveNewPassword(){
  const a=$('newPassword').value,b=$('newPassword2').value;
  if(a.length<8)return $('resetMsg').textContent='Use at least 8 characters.';
+ if(a.length>128)return $('resetMsg').textContent='Password must be 128 characters or fewer.';
  if(a!==b)return $('resetMsg').textContent='Passwords do not match.';
- const {error}=await sb.auth.updateUser({password:a});if(error)return $('resetMsg').textContent=error.message;
- $('newPassword').value='';$('newPassword2').value='';closeModal('resetModal');toast('Password updated successfully.');authMessage('Your password has been updated.');
+ const token=new URL(location.href).searchParams.get('token');
+ if(!token)return $('resetMsg').textContent='This reset link is missing or has expired. Request a new password reset email.';
+ $('resetMsg').textContent='Updating password…';
+ try{
+  const {error}=await authClient.resetPassword({newPassword:a,token});
+  if(error)return $('resetMsg').textContent=authErrorText(error,'The password could not be updated. Request a new reset link and try again.');
+  $('newPassword').value='';$('newPassword2').value='';
+  const url=new URL(location.href);url.searchParams.delete('token');history.replaceState({},'',url.pathname+(url.search||'')+url.hash);
+  closeModal('resetModal');toast('Password updated successfully.');authMessage('Your Ethan Cloud password has been updated.');
+ }catch(e){$('resetMsg').textContent=authErrorText(e,'The password could not be updated.')}
 }
 async function signOut(){if(!sb)return;const {error}=await sb.auth.signOut();if(error){toast(error.message);return}user=null;allFiles=[];allFolders=[];currentFolder=null;view='home';$('auth').classList.remove('hidden');$('accountEmail').textContent='';$('files').innerHTML='Sign in to view your files.';toggleMenu(false)}
 async function init(){
- showConfigError();
- if(!sb)return;
- sb.auth.onAuthStateChange((event,session)=>{
-  if(event==='PASSWORD_RECOVERY')$('resetModal').classList.remove('hidden');
-  if(session&&session.user){const changed=!user||user.id!==session.user.id;user=session.user;showApp();if(changed)Promise.resolve().then(()=>refresh())}
-  else if(event==='SIGNED_OUT'){user=null;allFiles=[];allFolders=[];$('auth').classList.remove('hidden')}
- });
- const u=new URL(location.href),ticket=u.searchParams.get('ethan_sso');
- if(ticket){
-  authMessage('Connecting your Ethan ID…');
-  try{const {data,error}=await sb.auth.verifyOtp({token_hash:ticket,type:'magiclink'});if(error)throw error;u.searchParams.delete('ethan_sso');history.replaceState({},'',u.pathname+(u.search||'')+(u.hash||''));if(data&&data.user){user=data.user;showApp();await refresh()}}
-  catch(e){console.warn('Ethan ID secure handoff could not be verified:',e);authMessage('The Ethan ID connection has expired or is invalid. Return to Ethan Hub and try again.')}
+ showConfigError();if(!sb||!authClient)return;
+ if(typeof sb.auth.onAuthStateChange==='function'){
+  sb.auth.onAuthStateChange((event,session)=>{
+   if(session&&session.user){const changed=!user||user.id!==session.user.id;user=session.user;showApp();if(changed)Promise.resolve().then(()=>refresh())}
+   else if(event==='SIGNED_OUT'){user=null;allFiles=[];allFolders=[];$('auth').classList.remove('hidden');$('accountEmail').textContent=''}
+  });
  }
+ if(new URL(location.href).searchParams.has('token'))$('resetModal').classList.remove('hidden');
  const {data,error}=await sb.auth.getSession();
- if(error){console.warn('Session lookup failed:',error.message);authMessage(authErrorText(error,'Your saved session could not be restored. Please sign in again.'))}
+ if(error){console.warn('Neon session lookup failed:',error.message);authMessage(authErrorText(error,'Your saved session could not be restored. Please sign in again.'))}
  if(data&&data.session&&data.session.user){user=data.session.user;showApp();await refresh()}
 }
 async function loadRows(table){
@@ -227,6 +267,16 @@ async function ensureSystemFolders(){
 }
 async function openSystemFolder(name){await ensureSystemFolders();const f=allFolders.find(x=>x.name===name&&!x.parent_id&&!x.is_trashed);if(f)openFolder(f.id)}
 function pickFile(){$('picker').click()}
+async function storageRequest(payload){
+ if(!sb)throw new Error('Sign in to Ethan Cloud first.');
+ const {data,error}=await sb.auth.getSession();if(error)throw error;
+ const token=data&&data.session?data.session.access_token:null;
+ if(!token)throw new Error('Your Cloud session has expired. Sign in again.');
+ const response=await fetch('/api/storage/presign',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload),cache:'no-store'});
+ const result=await response.json().catch(()=>({error:'The storage service returned an invalid response.'}));
+ if(!response.ok)throw new Error(result.error||'The Neon storage request failed ('+response.status+').');
+ return result;
+}
 async function uploadFiles(list){
  if(!user||!sb){toast('Sign in before uploading files.');return}
  const files=Array.from(list||[]);if(!files.length)return;
@@ -236,10 +286,11 @@ async function uploadFiles(list){
   const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,180)||'file';
   const path=user.id+'/'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(16).slice(2))+'-'+safe;
   try{
-   const {error}=await sb.storage.from(C.BUCKET).upload(path,file,{upsert:false,contentType:file.type||'application/octet-stream'});
-   if(error)throw error;
+   const signed=await storageRequest({action:'upload',key:path,contentType:file.type||'application/octet-stream'});
+   const uploaded=await fetch(signed.url,{method:'PUT',headers:signed.headers||{},body:file});
+   if(!uploaded.ok)throw new Error('Neon storage returned '+uploaded.status+' while uploading.');
    const {error:dbErr}=await sb.from('cloud_files').insert({owner_id:user.id,folder_id:currentFolder,name:file.name,storage_path:path,mime_type:file.type||null,size_bytes:file.size});
-   if(dbErr){await sb.storage.from(C.BUCKET).remove([path]);throw dbErr}
+   if(dbErr){await storageRequest({action:'delete',key:path}).catch(()=>{});throw dbErr}
    success++;
   }catch(e){failed++;console.warn('Upload failed:',file.name,e.message);toast('Could not upload '+file.name+': '+e.message)}
  }
@@ -270,9 +321,8 @@ async function deleteFolder(id){
  if(currentFolder===id)currentFolder=null;await refresh();toast('Folder deleted.');
 }
 async function signedUrl(f,seconds,download){
- const options=download?{download:download}:undefined;
- const {data,error}=await sb.storage.from(C.BUCKET).createSignedUrl(f.storage_path,seconds,options);
- if(error)throw error;return data.signedUrl;
+ const result=await storageRequest({action:'download',key:f.storage_path,expiresIn:seconds||600,downloadName:typeof download==='string'?download:''});
+ return result.url;
 }
 async function downloadFile(id){
  const f=allFiles.find(x=>x.id===id);if(!f)return;
@@ -337,8 +387,9 @@ async function trashFile(id,val){
 async function deleteForever(id){
  const f=allFiles.find(x=>x.id===id);if(!f)return;
  if(!confirm('Permanently delete "'+f.name+'"? This cannot be undone.'))return;
- const {error:se}=await sb.storage.from(C.BUCKET).remove([f.storage_path]);if(se)return toast('Storage deletion failed: '+se.message);
- const {error}=await sb.from('cloud_files').delete().eq('id',id);if(error)return toast('File record could not be deleted: '+error.message);
+ try{await storageRequest({action:'delete',key:f.storage_path})}catch(e){return toast('Storage deletion failed: '+e.message)}
+ const {error}=await sb.from('cloud_files').delete().eq('id',id);
+ if(error)return toast('File record could not be deleted: '+error.message);
  await refresh();toast('File permanently deleted.');
 }
 $('search').oninput=render;$('typeFilter').onchange=render;$('sortBy').onchange=render;
@@ -348,7 +399,13 @@ document.addEventListener('dragenter',e=>{if(!e.dataTransfer||!Array.from(e.data
 document.addEventListener('dragover',e=>{if(e.dataTransfer&&Array.from(e.dataTransfer.types||[]).includes('Files'))e.preventDefault()});
 document.addEventListener('dragleave',e=>{if(!e.dataTransfer||!Array.from(e.dataTransfer.types||[]).includes('Files'))return;dragDepth=Math.max(0,dragDepth-1);if(!dragDepth)$('dropMask').classList.add('hidden')});
 document.addEventListener('drop',e=>{if(!e.dataTransfer||!e.dataTransfer.files||!e.dataTransfer.files.length)return;e.preventDefault();dragDepth=0;$('dropMask').classList.add('hidden');uploadFiles(e.dataTransfer.files)});
-init();
+window.addEventListener('ethan-neon-ready',()=>{
+ sb=window.ETHAN_NEON_CLIENT||null;authClient=window.ETHAN_NEON_AUTH_CLIENT||null;clientError='';init();
+},{once:true});
+window.addEventListener('ethan-neon-error',()=>{
+ clientError=window.ETHAN_NEON_INIT_ERROR||'Neon services could not be loaded. Refresh and try again.';
+ showConfigError();authMessage(clientError);
+},{once:true});
 </script>
     <script async src="https://track.ethandigitalacademy.org/ethan-analytics.js" data-ethan-app="ethan-cloud" data-ethan-public-id="985c3537-137f-4e2f-92ce-9e867248fa64"></script>
 </body></html>
