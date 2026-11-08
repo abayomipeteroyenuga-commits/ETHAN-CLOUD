@@ -85,7 +85,7 @@ async function getUserId(req) {
 
   const { payload } = await jwtVerify(match[1], jwks);
   const userId = String(payload.sub || "");
-  if (!UUID_RE.test(userId) || (payload.role && payload.role !== "authenticated")) {
+  if (!UUID_RE.test(userId) || payload.role !== "authenticated") {
     const error = new Error("Your Ethan Cloud session is not valid. Sign in again.");
     error.statusCode = 401;
     throw error;
@@ -146,6 +146,7 @@ export default async function handler(req, res) {
     }
 
     if (action === "download") {
+      await ensureBucketCors();
       const requested = Number(body.expiresIn) || 600;
       const expiresIn = Math.min(604800, Math.max(60, Math.floor(requested)));
       const downloadName = String(body.downloadName || "").replace(/[\r\n"\\]/g, "_").slice(0, 180);
