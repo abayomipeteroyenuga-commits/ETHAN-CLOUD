@@ -1,0 +1,24 @@
+{
+  "name": "Ethan Cloud",
+  "short_name": "Ethan Cloud",
+  "description": "A secure workspace for your files, learning materials and Ethan ecosystem projects.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f7fb",
+  "theme_color": "#071b33",
+  "icons": [
+    {
+      "src": "/ethan-cloud-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "productivity",
+    "business",
+    "utilities"
+  ]
+}
